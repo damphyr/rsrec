@@ -1,0 +1,5 @@
+=== 0.0.1 / 2012-06-19
+
+* Initial release
+  * Parses SREC files and does all the checks
+
