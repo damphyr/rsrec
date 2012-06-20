@@ -1,3 +1,4 @@
+$:.unshift File.join(File.dirname(__FILE__),"..","lib")
 require "test/unit"
 require "rsrec"
 
@@ -16,4 +17,11 @@ class TestRsrec < Test::Unit::TestCase
     assert_equal(14, srec.byte_count)
     assert_equal("4B", srec.crc)
   end
+  
+  def test_srecord_crc
+    test_record="S00E00005065726675736F726D6F744A"
+    srec=nil
+    assert_raise(S19::SRecordError) { srec=S19::SRecord.parse(test_record) }
+  end
+  
 end

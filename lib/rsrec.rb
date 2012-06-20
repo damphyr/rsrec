@@ -19,13 +19,12 @@ module S19
       self.record_type= rtype
       @address = addr
       self.data=data
-      @payload = SRecord.extract_data(data)
     end
 
     def to_s
       "S#{@record_type}#{"%02x"% @byte_count}#{format_address}#{@data}#{crc}".upcase
     end
-    
+    #Returns the S-Record CRC 
     def crc
       SRecord.calculate_crc("#{"%02x"% @byte_count}#{format_address}#{@data}")
     end
@@ -47,12 +46,13 @@ module S19
         raise SRecordError,"Invalid record type: '#{rtype}'. Should be a number"
       end
     end
-    
+    #Parses a single line in SREC format and returns an SRecord instance
     def self.parse text_data
       #duplicate because we're slicing and dicing and throwing stuff away
       line=text_data.dup
-      if line.slice!(0)=='S'
-        record_type = line.slice!(0).to_i
+      #the (0..0) is for 1.8.7 compatibility, in 1.9 it gives the sliced char back
+      if line.slice!(0..0)=='S'
+        record_type = line.slice!(0..0).to_i
         #convert everything to hex
         byte_count=line.slice!(0..1).to_i(16)
         address = calculate_address(record_type,line)
@@ -119,7 +119,7 @@ module S19
       #1's complement of lsb and in hex string format
       ("%02x"% (lsb^0xFF)).upcase
     end
-    
+    #Converts 2n hex characters in n bytes
     def self.extract_data data_string
       line=data_string.dup
       binary=[]
