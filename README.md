@@ -1,6 +1,6 @@
 ## rsrec
 
-Parser for the Motorola S-Record format
+Ruby library for parsing and manipulating the Motorola S-Record format
 
 ### Requirements:
 
