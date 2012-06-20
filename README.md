@@ -9,7 +9,7 @@ None, this is pure Ruby man!
 ### What the hell is SREC?
 It's a hex text encoding for binary data. Really something you would use in embedded systems.
 
-For more on the format check [Wikipedia](http://en.wikipedia.org/wiki/SREC_(file_format))
+For more on the format check [Wikipedia]( http://en.wikipedia.org/wiki/SREC_(file_format) )
 
 ### Why?
 Cause we need to parse these things and peek and poke at specific addresses before flashing. And it's a text format, which makes Ruby ideal.
