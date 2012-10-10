@@ -24,4 +24,12 @@ class TestRsrec < Test::Unit::TestCase
     assert_raise(S19::SRecordError) { srec=S19::SRecord.parse(test_record) }
   end
   
+  def test_trimming
+    test_record="S00E00005065726675736F726D6F744B\n"
+    assert_nothing_raised(S19::SRecordError) { S19::SRecord.parse(test_record) }
+    test_record="S00E00005065726675736F726D6F744B\r"
+    assert_nothing_raised(S19::SRecordError) { S19::SRecord.parse(test_record) }
+    test_record="S00E00005065726675736F726D6F744B\r\n"
+    assert_nothing_raised(S19::SRecordError) { S19::SRecord.parse(test_record) }
+  end
 end

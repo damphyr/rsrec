@@ -48,15 +48,18 @@ module S19
     end
     #Parses a single line in SREC format and returns an SRecord instance
     def self.parse text_data
+      text_data.chomp!
       #duplicate because we're slicing and dicing and throwing stuff away
       line=text_data.dup
       #the (0..0) is for 1.8.7 compatibility, in 1.9 it gives the sliced char back
       if line.slice!(0..0)=='S'
         record_type = line.slice!(0..0).to_i
         #convert everything to hex
-        byte_count=line.slice!(0..1).to_i(16)
+        #take out the byte count
+        line.slice!(0..1).to_i(16)
         address = calculate_address(record_type,line)
-        crc=line.slice!(-2..-1)
+        #take out the crc
+        line.slice!(-2..-1)
         data = line
         check_crc(text_data)
         return SRecord.new(record_type,address,data)
