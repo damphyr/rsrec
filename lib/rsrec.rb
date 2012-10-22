@@ -67,6 +67,10 @@ module S19
         raise SRecordError,"Line without leading S"
       end
     end
+    #True if the record is of type 1,2 or 3
+    def data_record?
+      @record_type==1 || @record_type==2 || @record_type==3
+    end
     private
     #String representation of the address left padded with 0s
     def format_address 
@@ -132,10 +136,6 @@ module S19
       end
       return binary
     end
-    #True if the record is of type 1,2 or 3
-    def data_record?
-      @record_type==1 || @record_type==2 || @record_type==3
-    end
   end
 
   class MotFile
@@ -151,6 +151,8 @@ module S19
       @records.inject([]) do |buffer,record| 
         if record.data_record?
           buffer + record.binary
+        else
+          buffer
         end
       end
     end
