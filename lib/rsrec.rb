@@ -14,7 +14,7 @@ module S19
   #http://en.wikipedia.org/wiki/SREC_%28file_format%29
   class SRecord
     attr_accessor :address
-    attr_reader :payload,:data,:record_type,:byte_count
+    attr_reader :binary,:data,:record_type,:byte_count
     def initialize rtype,addr,data
       self.record_type= rtype
       @address = addr
@@ -33,9 +33,9 @@ module S19
     #pld is just the payload in hex text format (2nhex digits pro byte)
     def data= pld
       @data=pld
-      @payload=SRecord.extract_data(pld)
+      @binary=SRecord.extract_data(pld)
       #number of bytes in address+data+checksum (checksum is 1 byte)
-      @byte_count=format_address.size/2+@payload.size+1
+      @byte_count=format_address.size/2+@binary.size+1
     end
     #Raises SRecordError if supplied with an invalid record type
     def record_type= rtype
@@ -132,6 +132,10 @@ module S19
       end
       return binary
     end
+    #True if the record is of type 1,2 or 3
+    def data_record?
+      @record_type==1 || @record_type==2 || @record_type==3
+    end
   end
 
   class MotFile
@@ -139,14 +143,16 @@ module S19
     def initialize records=[]
       @records=records
     end
-    
-    #
     def to_s
       @records.each_with_object(""){|record,msg| msg<<"#{record}\n"}
     end
-
+    #The binary data from this mot file
     def binary
-      @records.inject([]){|buffer,record| buffer + record.payload}
+      @records.inject([]) do |buffer,record| 
+        if record.data_record?
+          buffer + record.binary
+        end
+      end
     end
 
     def self.from_file filename
