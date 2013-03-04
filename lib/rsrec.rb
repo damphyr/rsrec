@@ -146,17 +146,15 @@ module S19
     def to_s
       @records.each_with_object(""){|record,msg| msg<<"#{record}\n"}
     end
-    #The binary data from this mot file
-    def binary
-      @records.inject([]) do |buffer,record| 
-        if record.data_record?
-          buffer + record.binary
-        else
-          buffer
-        end
-      end
+    #Just the data records
+    def data_records
+      @records.select{|rec| rec.data_record?}.compact
     end
-
+    #The total size of the image in bytes
+    def image_size
+      data_records.last.address+data_records.last.binary.size-data_records.first.address
+    end
+    #Parses a .mot file in memory, returns MotFile
     def self.from_file filename
       records=File.readlines(filename).map{|line| SRecord.parse(line)}
       MotFile.new(records)
