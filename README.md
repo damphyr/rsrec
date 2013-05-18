@@ -1,7 +1,5 @@
 ## rsrec
-[![Build Status](https://secure.travis-ci.org/damphyr/rsrec.png)](http://travis-ci.org/damphyr/rsrec)
-
-[![Code Climate](https://codeclimate.com/github/damphyr/rsrec.png)](https://codeclimate.com/github/damphyr/rsrec)
+[![Build Status](https://secure.travis-ci.org/damphyr/rsrec.png)](http://travis-ci.org/damphyr/rsrec) [![Code Climate](https://codeclimate.com/github/damphyr/rsrec.png)](https://codeclimate.com/github/damphyr/rsrec)
 
 Ruby library for parsing and manipulating the Motorola S-Record format
 

@@ -1,5 +1,10 @@
-=== 0.0.1 / 2012-06-19
+=== 0.0.2 / 2013-05-18
+* Minor cleanup
+  * Updated gem dependencies
+  * Added coverage analysis in the tests
+  * Increased test coverage
+  * split the version in it's own file
 
+=== 0.0.1 / 2012-06-19
 * Initial release
   * Parses SREC files and does all the checks
-
