@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 # encoding: utf-8
 $:.unshift File.join(File.dirname(__FILE__),"lib")
-require 'rsrec'
-require 'rubygems'
+require 'rsrec/version'
 require 'hoe'
 
 Hoe.spec 'rsrec' do |prj|
