@@ -1,11 +1,5 @@
+require 'rsrec/version'
 module S19
-  module Version
-    MAJOR = 0
-    MINOR = 0 
-    TINY = 1
-    STRING = "#{MAJOR}.#{MINOR}.#{TINY}"
-  end
-  
   class SRecordError < RuntimeError
   end
 
@@ -13,8 +7,7 @@ module S19
   #
   #http://en.wikipedia.org/wiki/SREC_%28file_format%29
   class SRecord
-    attr_accessor :address
-    attr_reader :binary,:data,:record_type,:byte_count
+    attr_reader :binary,:data,:record_type,:byte_count,:address
     def initialize rtype,addr,data
       self.record_type= rtype
       @address = addr
@@ -27,24 +20,6 @@ module S19
     #Returns the S-Record CRC 
     def crc
       SRecord.calculate_crc("#{"%02x"% @byte_count}#{format_address}#{@data}")
-    end
-    #Set the data.
-    #
-    #pld is just the payload in hex text format (2nhex digits pro byte)
-    def data= pld
-      @data=pld
-      @binary=SRecord.extract_data(pld)
-      #number of bytes in address+data+checksum (checksum is 1 byte)
-      @byte_count=format_address.size/2+@binary.size+1
-    end
-    #Raises SRecordError if supplied with an invalid record type
-    def record_type= rtype
-      case rtype
-      when 0,1,2,3,4,5,6,7,8,9
-        @record_type=rtype
-      else
-        raise SRecordError,"Invalid record type: '#{rtype}'. Should be a number"
-      end
     end
     #Parses a single line in SREC format and returns an SRecord instance
     def self.parse text_data
@@ -69,9 +44,27 @@ module S19
     end
     #True if the record is of type 1,2 or 3
     def data_record?
-      @record_type==1 || @record_type==2 || @record_type==3
+      [1,2,3].include?(@record_type)
     end
     private
+    #Set the data.
+    #
+    #pld is just the payload in hex text format (2nhex digits pro byte)
+    def data= pld
+      @data=pld
+      @binary=SRecord.extract_data(pld)
+      #number of bytes in address+data+checksum (checksum is 1 byte)
+      @byte_count=format_address.size/2+@binary.size+1
+    end
+    #Raises SRecordError if supplied with an invalid record type
+    def record_type= rtype
+      case rtype
+      when 0,1,2,3,4,5,6,7,8,9
+        @record_type=rtype
+      else
+        raise SRecordError,"Invalid record type: '#{rtype}'. Should be a number"
+      end
+    end
     #String representation of the address left padded with 0s
     def format_address 
       case @record_type
@@ -81,8 +74,6 @@ module S19
           return "%06x"% @address
         when 3,7
           return "%08x"% @address
-      else
-          raise SRecordError,"Cannot format address. Unknown record type #{@record_type}"
       end
     end
     #Gets 2n chars and converts them to hex

@@ -2,4 +2,5 @@ History.txt
 Manifest.txt
 README.txt
 lib/rsrec.rb
+lib/rsrec/version
 test/test_rsrec.rb
